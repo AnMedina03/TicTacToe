@@ -1,0 +1,16 @@
+•   Top 3 de los mejores jugadores del último mes con sus puntajes.
+        o    partidos = π Partida.ganador → jugador, mul(veces,5) → score (γ Partida.ganador; count(Partida.idPartida) → veces (σ Asigna.campeonato = null ((Partida) ⟕ Partida.idPartida = Asigna.partida (Asigna))))
+        o    campeonatos = π Asigna.ganador → jugador, mul(veces,10) → score (γ Asigna.ganador; count(Asigna.partida) → veces (σ Asigna.clasificacion = 1 (Asigna)))
+        o    jugadores = γ jugador; sum(score) → Puntaje (partidos ∪ campeonatos)
+        o    σ rownum()<=3 (τ Puntaje desc (jugadores))
+        
+•   Cantidad de jugadores por edad desde el inicio del programa.
+    
+        o    yearsOld = π Jugador.usuario,sub(year(now()), year(Jugador.fechaNacimiento)) → Edad (σ month(Jugador.fechaNacimiento)<month(now()) ∨ day(Jugador.fechaNacimiento)<=day(now()) (Jugador))
+        o    years = π Jugador.usuario,sub(year(now())-1, year(Jugador.fechaNacimiento)) → Edad (σ month(Jugador.fechaNacimiento)>=month(now()) ∧ day(Jugador.fechaNacimiento)>day(now()) (Jugador))
+        o    τ Edad asc (γ Edad; Cantidad ← count(Jugador.usuario) (years ∪ yearsOld))
+    
+•   Listado de jugadores que nunca han ganado una partida.
+    
+        o    π Jugador.nombre, Jugador.apellido, Jugador.usuario (σ Partida.idPartida = null ((Jugador) ⟕ Jugador.usuario = Partida.ganador (Partida)))
+
